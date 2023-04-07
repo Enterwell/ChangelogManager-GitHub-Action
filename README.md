@@ -1,0 +1,1 @@
+# ChangelogManager-GitHub-Actions
