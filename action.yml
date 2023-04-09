@@ -1,0 +1,27 @@
+name: Merge Changelog
+description: Compiles the change files into CHANGELOG.md
+author: Enterwell
+branding:
+  color: yellow
+  icon: git-merge
+
+inputs:
+  semantic-version:
+    description: 'Version of the repository: MAJOR.MINOR.PATCH'
+    required: true
+    default: ''
+  changelog-location:
+    description: Location of the directory that contains Changelog.md
+    required: false
+    default: './'
+  changes-in-different-location:
+    description: Mark this as true if the 'changes' directory exists somewhere else than on the changelog location
+    required: false
+    default: 'false'
+  changes-location:
+    description: Location of the 'changes' directory
+    required: false
+
+runs:
+  using: node16
+  main: dist/index.js
