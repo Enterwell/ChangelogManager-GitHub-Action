@@ -1,7 +1,7 @@
 <h1 align="center">
   <img width="128" height="128" src="docs/icon.svg" alt="logo" />
 
-  Changelog Manager Github Action
+  Changelog Manager GitHub Action
 </h1>
 
 <div align="center">
