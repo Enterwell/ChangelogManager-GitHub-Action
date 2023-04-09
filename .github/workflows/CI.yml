@@ -78,3 +78,5 @@ jobs:
         with:
           message: "[skip ci] [merge-changelog] Automated commit with updated changelog and bumped version"
           new_branch: ${{ env.BRANCH_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AT_PAT }}
