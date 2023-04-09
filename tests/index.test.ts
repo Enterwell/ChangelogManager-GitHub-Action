@@ -34,7 +34,7 @@ describe('Merge Changelog Test Suite', () => {
       createChangelogFile(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', 'something that\'s invalid', false, testRoot);
+      const result = await runActionAsync('something that\'s invalid', false, testRoot);
 
       // Assert
       expect(result).not.toBeNull();
@@ -51,7 +51,7 @@ describe('Merge Changelog Test Suite', () => {
       createChangelogFile(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', testRoot, true, 'something that\'s invalid');
+      const result = await runActionAsync(testRoot, true, 'something that\'s invalid');
 
       // Assert
       expect(result).not.toBeNull();
@@ -68,30 +68,13 @@ describe('Merge Changelog Test Suite', () => {
       createChangelogFile(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', testRoot, true, '');
+      const result = await runActionAsync(testRoot, true, '');
 
       // Assert
       expect(result).not.toBeNull();
       expect(result.exitCode).toBe(1);
       expect(result.executableOutput).toContain('Input required and not supplied: changes-location');
     });
-
-    /**
-     * Tests that the task fails when invalid semantic version is passed in
-     */
-    it('should fail if input semantic version is not in the correct format', async () => {
-      // Arrange 
-      createAndFillChanges(testRoot);
-      createChangelogFile(testRoot);
-
-      // Act
-      const result = await runActionAsync('1.2', testRoot, false, testRoot);
-
-      // Assert
-      expect(result).not.toBeNull();
-      expect(result.exitCode).toBe(1);
-      expect(result.executableOutput).toContain('Error occurred while running the executable');
-    }, 10000);
   })
 
   /**
@@ -106,7 +89,7 @@ describe('Merge Changelog Test Suite', () => {
       createAndFillChanges(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', testRoot, false, testRoot);
+      const result = await runActionAsync(testRoot, false, testRoot);
 
       // Assert
       expect(result).not.toBeNull();
@@ -122,7 +105,7 @@ describe('Merge Changelog Test Suite', () => {
       createChangelogFile(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', testRoot, false, testRoot);
+      const result = await runActionAsync(testRoot, false, testRoot);
 
       // Assert
       expect(result).not.toBeNull();
@@ -139,7 +122,7 @@ describe('Merge Changelog Test Suite', () => {
       createChangelogFile(testRoot);
 
       // Act
-      const result = await runActionAsync('1.2.0', testRoot, false, testRoot);
+      const result = await runActionAsync(testRoot, false, testRoot);
 
       // Assert
       expect(result).not.toBeNull();

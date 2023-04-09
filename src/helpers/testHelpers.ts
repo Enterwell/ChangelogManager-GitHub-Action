@@ -40,12 +40,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 /**
  * Runs the action.
  *
- * @param semanticVersion Input semantic version
  * @param changelogLocation Input changelog location
  * @param changesInDiffLocation Input changes in different locaiton
  * @param changesLocation Input changes location
  */
-export const runActionAsync = async (semanticVersion: string, changelogLocation: string, changesInDiffLocation: boolean, changesLocation: string) => {
+export const runActionAsync = async (changelogLocation: string, changesInDiffLocation: boolean, changesLocation: string) => {
   let executableOutput = '';
 
   const executableOptions: ExecOptions = {
@@ -54,7 +53,6 @@ export const runActionAsync = async (semanticVersion: string, changelogLocation:
     },
     cwd: join(__dirname, '../..', 'dist'),
     env: {
-      'INPUT_SEMANTIC-VERSION': semanticVersion,
       'INPUT_CHANGELOG-LOCATION': changelogLocation,
       'INPUT_CHANGES-IN-DIFFERENT-LOCATION': `${changesInDiffLocation}`,
       'INPUT_CHANGES-LOCATION': changesLocation

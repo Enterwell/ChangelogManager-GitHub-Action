@@ -6,10 +6,6 @@ branding:
   icon: git-merge
 
 inputs:
-  semantic-version:
-    description: 'Version of the repository: MAJOR.MINOR.PATCH'
-    required: true
-    default: ''
   changelog-location:
     description: Location of the directory that contains Changelog.md
     required: false
@@ -21,6 +17,17 @@ inputs:
   changes-location:
     description: Location of the 'changes' directory
     required: false
+  set-version-flag:
+    description: Should the new version be set in the appropriate project file ('package.json' or '*.csproj')
+    required: false
+    default: 'false'
+  path-to-project-file:
+    description: 'Path to the project file. If not set, the application will try to automatically determine the project file. Currently supported project types: NPM (package.json) and .NET SDK (*.csproj with the version tag).'
+    required: false
+
+outputs:
+  bumped-semantic-version:
+    description: Newly bumped semantic version based on the changes made
 
 runs:
   using: node16
