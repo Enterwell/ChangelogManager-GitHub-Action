@@ -3,9 +3,6 @@ name: CI
 # Triggering the workflow on PRs and pushes to relevant branches
 on:
   pull_request:
-    branches:
-      - main
-      - feature/**
   push:
     branches:
       - main
