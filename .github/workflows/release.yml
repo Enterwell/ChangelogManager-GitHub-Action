@@ -1,19 +1,15 @@
-name: Version bumping
+name: Release
 
-# Variables
-env:
-  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-
-# Triggering the workflow on PR to main
+# Triggering the workflow on pushes to main
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
-  # Bumping the version and updating the CHANGELOG
-  version-bumping:
-    name: Version bumping
+  # Release job
+  release:
+    name: Release
     runs-on: ubuntu-latest
 
     steps:
@@ -23,6 +19,7 @@ jobs:
       
       # Bump version and update changelog
       - name: Bump version and update changelog
+        id: version-bump
         uses: ./
         with:
           set-version-flag: true
@@ -31,7 +28,4 @@ jobs:
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.1
         with:
-          message: "[skip ci] [version-bump] Automated commit with bumped version"
-          new_branch: ${{ env.BRANCH_NAME }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.AT_PAT }}
+          message: "[skip ci] [version-bump] Automated commit for version ${{ steps.version-bump.outputs.bumped-semantic-version }}"
