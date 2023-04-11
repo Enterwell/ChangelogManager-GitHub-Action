@@ -9,7 +9,7 @@
   <div>
 
   [![Test](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/CI.yml/badge.svg)](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/CI.yml)
-  [![CodeQL](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/codeql-anaysis.yml/badge.svg)](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/codeql-anaysis.yml)
+  [![CodeQL](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Enterwell/ChangelogManager-GitHub-Action/actions/workflows/codeql-analysis.yml)
   [![GitHub issues](https://img.shields.io/github/issues/Enterwell/ChangelogManager-GitHub-Action?color=0088ff)](https://github.com/Enterwell/ChangelogManager-GitHub-Action/issues)
 
   </div>
