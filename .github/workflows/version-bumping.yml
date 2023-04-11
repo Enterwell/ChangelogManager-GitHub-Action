@@ -1,0 +1,37 @@
+name: Version bumping
+
+# Variables
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+# Triggering the workflow on PR to main
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Bumping the version and updating the CHANGELOG
+  version-bumping:
+    name: Version bumping
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # Bump version and update changelog
+      - name: Bump version and update changelog
+        uses: ./
+        with:
+          set-version-flag: true
+      
+      # Committing new changes
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9.1.1
+        with:
+          message: "[skip ci] [version-bump] Automated commit with bumped version"
+          new_branch: ${{ env.BRANCH_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.AT_PAT }}
