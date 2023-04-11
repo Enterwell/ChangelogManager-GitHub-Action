@@ -1,0 +1,34 @@
+name: Merge Changelog
+description: Compiles the change files into CHANGELOG.md
+author: Enterwell
+branding:
+  color: yellow
+  icon: git-merge
+
+inputs:
+  changelog-location:
+    description: Location of the directory that contains Changelog.md
+    required: false
+    default: './'
+  changes-in-different-location:
+    description: Mark this as true if the 'changes' directory exists somewhere else than on the changelog location
+    required: false
+    default: 'false'
+  changes-location:
+    description: Location of the 'changes' directory
+    required: false
+  set-version-flag:
+    description: Should the new version be set in the appropriate project file ('package.json' or '*.csproj')
+    required: false
+    default: 'false'
+  path-to-project-file:
+    description: 'Path to the project file. If not set, the application will try to automatically determine the project file. Currently supported project types: NPM (package.json) and .NET SDK (*.csproj with the version tag).'
+    required: false
+
+outputs:
+  bumped-semantic-version:
+    description: Newly bumped semantic version based on the changes made
+
+runs:
+  using: node16
+  main: dist/index.js

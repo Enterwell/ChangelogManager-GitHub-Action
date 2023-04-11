@@ -1,0 +1,17 @@
+{
+  "bumpingRule": {
+    "major": [
+      "Removed"
+    ],
+    "minor": [
+      "Added",
+      "Changed",
+      "Deprecated",
+      "NoChanges"
+    ],
+    "patch": [
+      "Fixed",
+      "Security"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+name: CI
+
+# Triggering the workflow on PRs and pushes to relevant branches
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/**
+  push:
+    branches:
+      - main
+
+jobs:
+  # Job testing the Action
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      # Installing pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.x
+      
+      # Defining what Node.js version to use
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: pnpm
+      
+      # Installing node dependencies using pnpm
+      - name: Pnpm install
+        run: pnpm install
+      
+      # Building the Action
+      - name: Pnpm build 
+        run: pnpm build
+
+      # Linting the Action
+      - name: Pnpm lint
+        run: pnpm lint
+
+      # Testing the Action (internally runs the package command before running tests to ensure latest code)
+      - name: Pnpm package and test
+        run: pnpm test
