@@ -17,8 +17,8 @@ inputs:
   changes-location:
     description: Location of the 'changes' directory
     required: false
-  set-version-flag:
-    description: Should the new version be set in the appropriate project file ('package.json' or '*.csproj')
+  should-bump-version:
+    description: Should the new version be bumped in the appropriate project file ('package.json' or '*.csproj')
     required: false
     default: 'false'
   path-to-project-file:

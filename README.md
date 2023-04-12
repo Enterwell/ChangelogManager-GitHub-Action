@@ -46,7 +46,9 @@ We **highly** recommend that you read up on how and what exactly is it doing beh
 ## 📖 Table of contents
 + 🌱 [Introduction](#-introduction)
 + 🛠️ [Prerequisities](#-prerequisities)
-+ 🔖 [Versions](#-versions)
++ 📝 [Usage](#-usage)
++ 📥 [Inputs](#-inputs)
++ 📤 [Outputs](#-outputs)
 + 🏗 [Development](#-development)
 + ☎️ [Support](#-support)
 + 🪪 [License](#-license)
@@ -69,124 +71,60 @@ The action also needs to be able to find `CHANGELOG.md` file (naming is case-ins
 ## [Unreleased]
 ```
 
-## 🔖 Versions
+## 📝 Usage
 
-This action currently has two versions: `v1` and `v2`.
-
-### v1
-
-The initial action originally developed to be ran ***only*** inside Windows runners.
-
-#### 📝 Usage
-
-#### Basic
+### Basic
 ```yaml
-uses: Enterwell/ChangelogManager-GitHub-Action@v1
-with:
-  semantic-version: <major.minor.patch>
+uses: Enterwell/ChangelogManager-GitHub-Action@v3
 ```
 
-#### Advanced
+### Advanced
 ```yaml
-uses: Enterwell/ChangelogManager-GitHub-Action@v1
-with:
-  semantic-version: <major.minor.patch>
-  changelog-location: ./
-  changes-in-different-location: true
-  changes-location: ./somewhere-else/changes
-```
-
-#### 📥 Inputs
-
-#### `semantic-version`
-**Required** A string (e.g. major.minor.patch) representing the new version of the repository.
-
-#### `changelog-location`
-**Optional** Location of the directory containing the `CHANGELOG.md` file.
-  + Defaults to `./`
-
-#### `changes-in-different-location`
-**Optional** Boolean representing that the *changes* directory exists in a different location than the `CHANGELOG.md` file.
-  + Defaults to `false`
-
-#### `changes-location`
-**Optional** Location of the `changes` directory.
-  + If the previous input is set to `false`, changes location is set to `<location containing the CHANGELOG.md>\changes`.
-
-#### 📤 Outputs
-
-None
-
-### v2
-
-The smarter, new and improved action! 🎉
-
-New features:
-+ can be ran inside both, Ubuntu and Windows runners 🤖
-+ removed explicit semantic version input
-  + The task is smart enough to determine the next version by itself based on your current application's version and the changes you made! 🤯
-+ can automatically (or explicitly) determine the project file and bump its version
-  + this feature is **opt-in**
-  + supported project types
-    + NPM (`package.json`)
-    + .NET SDK (`.csproj` with the `Version` (case-insensitive) tag)
-+ outputs the newly bumped application's version as an output variable
-+ ***only*** deleting [change](#what-are-the-change-files) files that were used to build the new changelog section and therefore eliminating the risk of accidentally deleting wrong files
-
-#### 📝 Usage
-
-#### Basic
-```yaml
-uses: Enterwell/ChangelogManager-GitHub-Action@v2
-```
-
-#### Advanced
-```yaml
-uses: Enterwell/ChangelogManager-GitHub-Action@v2
+uses: Enterwell/ChangelogManager-GitHub-Action@v3
 with:
   changelog-location: ./
   changes-in-different-location: true
   changes-location: ./somewhere-else/changes
-  set-version-flag: true
+  should-bump-version: true
   path-to-project-file: ./somewhere-else/[package.json | something.csproj]
 ```
 
-#### 📥 Inputs
+## 📥 Inputs
 
-#### `changelog-location`
+### `changelog-location`
 **Optional** Location of the directory containing the `CHANGELOG.md` file.
   + Defaults to `./`
 
-#### `changes-in-different-location`
+### `changes-in-different-location`
 **Optional** Boolean representing that the *changes* directory exists in a different location than the `CHANGELOG.md` file.
   + Defaults to `false`
 
-#### `changes-location`
+### `changes-location`
 **Optional** Location of the `changes` directory.
   + If the previous input is set to `false`, changes location is set to `<location containing the CHANGELOG.md>\changes`.
 
-#### `set-version-flag`
+### `should-bump-version`
 **Optional** Boolean representing should the new version be set in the appropriate project file (`package.json` or `*.csproj`).
   + Defaults to `false`
 
-#### `path-to-project-file`
+### `path-to-project-file`
 **Optional** Path to the project file (`package.json` or `.csproj` with the `version` (case-insensitive) tag).
   + If the previous input is set to `true`, but this input is not passed in explicitly, the action will try to automatically determine the appropriate project file
   + If the previous input is set to `false`, this input is **ignored**
 
-#### 📤 Outputs
+## 📤 Outputs
 
-#### `bumped-semantic-version`
+### `bumped-semantic-version`
 Newly bumped semantic version based on the changes made.
 
-#### Usage
+### Usage
 
 ```yaml
 # github-workflow.yml
 ...
   steps:
     ...
-    - uses: Enterwell/ChangelogManager-GitHub-Action@v2
+    - uses: Enterwell/ChangelogManager-GitHub-Action@v3
       id: merge-changelog
 
     - run: echo ${{ steps.merge-changelog.outputs.bumped-semantic-version }}

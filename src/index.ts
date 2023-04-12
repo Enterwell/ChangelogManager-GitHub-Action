@@ -15,7 +15,7 @@ async function run() {
     const changelogLocation = getInput('changelog-location');
     const differentLocation = getInput('changes-in-different-location') === 'true';
     let changesLocation: string;
-    const setVersionFlag = getInput('set-version-flag') === 'true';
+    const shouldBumpVersion = getInput('should-bump-version') === 'true';
     const pathToProjectFile = getInput('path-to-project-file');
 
     if (!differentLocation) {
@@ -28,7 +28,7 @@ async function run() {
     console.log(`Using changelog location: ${changelogLocation}`);
     console.log(`Using different location for 'changes' directory: ${differentLocation}`);
     console.log(`Using changes location: ${changesLocation}`);
-    console.log(`Using set version flag: ${setVersionFlag}`);
+    console.log(`Should bump version: ${shouldBumpVersion}`);
     console.log(`Using path to the project file: ${pathToProjectFile}`);
 
     if (!changesLocation.endsWith('changes')) {
@@ -42,7 +42,7 @@ async function run() {
     // Run the executable
     try {
       const setVersionProjectFilePath = pathToProjectFile !== '' ? `:${pathToProjectFile}` : '';
-      const setVersionOption = setVersionFlag ? `-sv${setVersionProjectFilePath}` : null;
+      const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : null;
 
       let fileToRunPath: string;
       let newlyBumpedVersion: string;
