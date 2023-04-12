@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **NOTE: This is an automatically generated file. Do not modify contents of this file manually.**
 
+## [2.0.0] - 2023-04-12
+### Added
+- Managing the action repository CHANGELOG using this exact action!
+
+### Changed
+- Updated the action to v2! 🎉
+- Updated the README
+
+### Removed
+- Explicit semantic version input
+
 ## [1.0.0] - 2023-04-08
 ### Added
 + Project initialized along with the action v1 and a README
