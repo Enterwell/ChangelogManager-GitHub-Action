@@ -26,8 +26,16 @@ inputs:
     required: false
 
 outputs:
-  bumped-semantic-version:
+  bumped-full-version:
     description: Newly bumped semantic version based on the changes made
+  bumped-major-part:
+    description: Major part of the newly bumped version
+  bumped-minor-part:
+    description: Minor part of the newly bumped version
+  bumped-patch-part:
+    description: Patch part of the newly bumped version
+  new-changes:
+    description: Changes from the new changelog section
 
 runs:
   using: node16

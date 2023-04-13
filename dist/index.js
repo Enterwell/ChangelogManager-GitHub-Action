@@ -7,7 +7,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.printContents = void 0;
+exports.removeVersionLine = exports.getVersionFromString = exports.printContents = void 0;
 const path_1 = __nccwpck_require__(1017);
 const fs_1 = __nccwpck_require__(7147);
 /**
@@ -16,7 +16,7 @@ const fs_1 = __nccwpck_require__(7147);
  * @param changelogLocation Path to the directory where "Changelog.md" is located
  * @param changesLocation Path to the "changes" directory
  */
-const printContents = (changelogLocation, changesLocation) => {
+function printContents(changelogLocation, changesLocation) {
     let changelogName = 'changelog.md';
     // Print the contents of the directory that should contain "Changelog.md"
     try {
@@ -51,8 +51,30 @@ const printContents = (changelogLocation, changesLocation) => {
     catch (error) {
         throw new Error(`Error occurred while reading changelog file.\n${error}`);
     }
-};
+}
 exports.printContents = printContents;
+/**
+ * Gets the semantic version from a changelog section by using regex.
+ *
+ * @param input Changelog section
+ */
+function getVersionFromString(input) {
+    const regex = /(?:\[)(\d+\.\d+\.\d+)(?:\])/;
+    const match = input.match(regex);
+    return match ? match[1] : null;
+}
+exports.getVersionFromString = getVersionFromString;
+/**
+ * Removes the first header line from a changelog section to get changes.
+ *
+ * @param input Changelog section
+ */
+function removeVersionLine(input) {
+    const lines = input.split('\n');
+    lines.shift();
+    return lines.join('\n');
+}
+exports.removeVersionLine = removeVersionLine;
 
 
 /***/ }),
@@ -112,15 +134,15 @@ function run() {
                 const setVersionProjectFilePath = pathToProjectFile !== '' ? `:${pathToProjectFile}` : '';
                 const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : null;
                 let fileToRunPath;
-                let newlyBumpedVersion;
+                let newChangelogSection;
                 // If on windows VM
                 if (process.platform === 'win32') {
                     fileToRunPath = (0, path_1.join)(__dirname, 'clm.exe');
                     if (setVersionOption == null) {
-                        newlyBumpedVersion = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
+                        newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
                     }
                     else {
-                        newlyBumpedVersion = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
+                        newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
                     }
                 }
                 else {
@@ -129,12 +151,12 @@ function run() {
                     let error;
                     if (setVersionOption == null) {
                         const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-                        newlyBumpedVersion = result.stdout;
+                        newChangelogSection = result.stdout;
                         error = result.stderr;
                     }
                     else {
                         const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-                        newlyBumpedVersion = result.stdout;
+                        newChangelogSection = result.stdout;
                         error = result.stderr;
                     }
                     if (error) {
@@ -142,13 +164,23 @@ function run() {
                     }
                 }
                 console.log('=============================================AFTER EXECUTION=============================================');
-                newlyBumpedVersion = newlyBumpedVersion.trim();
-                console.log(`Newly bumped version got from the executable: ${newlyBumpedVersion}`);
-                if (!(/\d+.\d+.\d+/.test(newlyBumpedVersion))) {
-                    throw new Error('Executable output is not in the correct format.');
+                console.log('New changelog section from the executable:');
+                console.log(newChangelogSection ? newChangelogSection : '-');
+                const newlyBumpedVersion = (0, actionHelpers_1.getVersionFromString)(newChangelogSection);
+                if (!newlyBumpedVersion) {
+                    throw new Error('Could not parse the new semantic version from the changelog section');
                 }
-                // Set output variable
-                (0, core_1.setOutput)('bumped-semantic-version', newlyBumpedVersion);
+                const versionParts = newlyBumpedVersion.split('.');
+                if (versionParts.length !== 3) {
+                    throw new Error('Newly bumped semantic version is not in the correct format (MAJOR.MINOR.PATCH).');
+                }
+                const changes = (0, actionHelpers_1.removeVersionLine)(newChangelogSection);
+                // Set output variables
+                (0, core_1.setOutput)('bumped-full-version', newlyBumpedVersion);
+                (0, core_1.setOutput)('bumped-major-part', versionParts[0]);
+                (0, core_1.setOutput)('bumped-minor-part', versionParts[1]);
+                (0, core_1.setOutput)('bumped-patch-part', versionParts[2]);
+                (0, core_1.setOutput)('new-changes', changes);
             }
             catch (error) {
                 throw new Error(`Error occurred while running the executable.\n${error}`);

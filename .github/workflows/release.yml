@@ -23,19 +23,12 @@ jobs:
         uses: ./
         with:
           should-bump-version: true
-      
+
       # Committing new changes
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.1
         with:
-          message: "[skip ci] [version-bump] Automated commit for version ${{ steps.version-bump.outputs.bumped-semantic-version }}"
-
-      # Parse the semantic version
-      - name: Parsing semantic version
-        uses: booxmedialtd/ws-action-parse-semver@v1
-        id: semver_parser
-        with:
-          input_string: ${{ steps.version-bump.outputs.bumped-semantic-version }}
+          message: "[skip ci] [version-bump] Automated commit for version ${{ steps.version-bump.outputs.bumped-full-version }}"
 
       # Update Git tags
       - name: Git tags update
@@ -43,14 +36,14 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
 
-          git tag "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
-          git tag -f "v${{ steps.semver_parser.outputs.major }}" "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
-          git tag -f "v${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}" "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
+          git tag "v${{ steps.version-bump.outputs.bumped-full-version }}"
+          git tag -f "v${{ steps.version-bump.outputs.bumped-major-part }}" "v${{ steps.version-bump.outputs.bumped-full-version }}"
+          git tag -f "v${{ steps.version-bump.outputs.bumped-major-part }}.${{ steps.version-bump.outputs.bumped-minor-part }}" "v${{ steps.version-bump.outputs.bumped-full-version }}"
 
           git push -f --tags
 
       # Creating latest release
       - name: Create GitHub release
-        run: gh release create "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
+        run: gh release create "v${{ steps.version-bump.outputs.bumped-full-version }}" -n "${{ steps.version-bump.outputs.new-changes }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

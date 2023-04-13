@@ -4,7 +4,7 @@ import { execFileSync, spawnSync } from 'child_process';
 import { chmodSync } from 'fs-extra';
 import { getInput, setFailed, setOutput } from '@actions/core';
 
-import { printContents } from './helpers/actionHelpers';
+import { getVersionFromString, printContents, removeVersionLine } from './helpers/actionHelpers';
 
 /**
  * Action entry point.
@@ -45,16 +45,16 @@ async function run() {
       const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : null;
 
       let fileToRunPath: string;
-      let newlyBumpedVersion: string;
+      let newChangelogSection: string;
 
       // If on windows VM
       if (process.platform === 'win32') {
         fileToRunPath = join(__dirname, 'clm.exe');
 
         if (setVersionOption == null) {
-          newlyBumpedVersion = execFileSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
+          newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
         } else {
-          newlyBumpedVersion = execFileSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
+          newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
         }
       } else {
         fileToRunPath = join(__dirname, 'clm');
@@ -65,12 +65,12 @@ async function run() {
         if (setVersionOption == null) {
           const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
 
-          newlyBumpedVersion = result.stdout;
+          newChangelogSection = result.stdout;
           error = result.stderr;
         } else {
           const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
 
-          newlyBumpedVersion = result.stdout;
+          newChangelogSection = result.stdout;
           error = result.stderr;
         }
 
@@ -80,16 +80,27 @@ async function run() {
       }
       
       console.log('=============================================AFTER EXECUTION=============================================');
+      console.log('New changelog section from the executable:');
+      console.log(newChangelogSection ? newChangelogSection : '-');
 
-      newlyBumpedVersion = newlyBumpedVersion.trim();
-      console.log(`Newly bumped version got from the executable: ${newlyBumpedVersion}`);
-
-      if (!(/\d+.\d+.\d+/.test(newlyBumpedVersion))) {
-        throw new Error('Executable output is not in the correct format.');
+      const newlyBumpedVersion = getVersionFromString(newChangelogSection);
+      if (!newlyBumpedVersion) {
+        throw new Error('Could not parse the new semantic version from the changelog section');
       }
 
-      // Set output variable
-      setOutput('bumped-semantic-version', newlyBumpedVersion);
+      const versionParts = newlyBumpedVersion.split('.');
+      if (versionParts.length !== 3) {
+        throw new Error('Newly bumped semantic version is not in the correct format (MAJOR.MINOR.PATCH).');
+      }
+
+      const changes = removeVersionLine(newChangelogSection);
+
+      // Set output variables
+      setOutput('bumped-full-version', newlyBumpedVersion);
+      setOutput('bumped-major-part', versionParts[0]);
+      setOutput('bumped-minor-part', versionParts[1]);
+      setOutput('bumped-patch-part', versionParts[2]);
+      setOutput('new-changes', changes);
     } catch (error) {
       throw new Error(`Error occurred while running the executable.\n${error}`);
     }

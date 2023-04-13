@@ -114,8 +114,20 @@ with:
 
 ## 📤 Outputs
 
-### `bumped-semantic-version`
+### `bumped-full-version`
 Newly bumped semantic version based on the changes made.
+
+### `bumped-major-part`
+Major part of the newly bumped version
+
+### `bumped-minor-part`
+Minor part of the newly bumped version
+
+### `bumped-patch-part`
+Patch part of the newly bumped version
+
+### `new-changes`
+Changes from the new changelog section
 
 ### Usage
 
@@ -127,7 +139,7 @@ Newly bumped semantic version based on the changes made.
     - uses: Enterwell/ChangelogManager-GitHub-Action@v3
       id: merge-changelog
 
-    - run: echo ${{ steps.merge-changelog.outputs.bumped-semantic-version }}
+    - run: echo ${{ steps.merge-changelog.outputs.bumped-full-version }}
     ...
 ...
 ```
