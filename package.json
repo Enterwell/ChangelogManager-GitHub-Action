@@ -1,6 +1,6 @@
 {
   "name": "ChangelogManager-GitHub-Action",
-  "version": "2.0.0",
+  "version": "3.0.2",
   "description": "Compiles the change files into CHANGELOG.md",
   "main": "bin/index.js",
   "scripts": {
