@@ -126,11 +126,19 @@ function run() {
                 else {
                     fileToRunPath = (0, path_1.join)(__dirname, 'clm');
                     (0, fs_extra_1.chmodSync)(fileToRunPath, 0o777);
+                    let error;
                     if (setVersionOption == null) {
-                        newlyBumpedVersion = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' }).stdout;
+                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
+                        newlyBumpedVersion = result.stdout;
+                        error = result.stderr;
                     }
                     else {
-                        newlyBumpedVersion = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' }).stdout;
+                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
+                        newlyBumpedVersion = result.stdout;
+                        error = result.stderr;
+                    }
+                    if (error) {
+                        throw new Error(error);
                     }
                 }
                 console.log('=============================================AFTER EXECUTION=============================================');

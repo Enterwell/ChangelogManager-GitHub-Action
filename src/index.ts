@@ -60,10 +60,22 @@ async function run() {
         fileToRunPath = join(__dirname, 'clm');
         chmodSync(fileToRunPath, 0o777);
 
+        let error: string;
+
         if (setVersionOption == null) {
-          newlyBumpedVersion = spawnSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' }).stdout;
+          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
+
+          newlyBumpedVersion = result.stdout;
+          error = result.stderr;
         } else {
-          newlyBumpedVersion = spawnSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' }).stdout;
+          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
+
+          newlyBumpedVersion = result.stdout;
+          error = result.stderr;
+        }
+
+        if (error) {
+          throw new Error(error);
         }
       }
       
