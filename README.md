@@ -114,7 +114,7 @@ with:
 
 ## 📤 Outputs
 
-### `bumped-full-version`
+### `bumped-semantic-version`
 Newly bumped semantic version based on the changes made.
 
 ### `bumped-major-part`
@@ -139,7 +139,7 @@ Changes from the new changelog section
     - uses: Enterwell/ChangelogManager-GitHub-Action@v3
       id: merge-changelog
 
-    - run: echo ${{ steps.merge-changelog.outputs.bumped-full-version }}
+    - run: echo ${{ steps.merge-changelog.outputs.bumped-semantic-version }}
     ...
 ...
 ```

@@ -176,7 +176,7 @@ function run() {
                 }
                 const changes = (0, actionHelpers_1.removeVersionLine)(newChangelogSection);
                 // Set output variables
-                (0, core_1.setOutput)('bumped-full-version', newlyBumpedVersion);
+                (0, core_1.setOutput)('bumped-semantic-version', newlyBumpedVersion);
                 (0, core_1.setOutput)('bumped-major-part', versionParts[0]);
                 (0, core_1.setOutput)('bumped-minor-part', versionParts[1]);
                 (0, core_1.setOutput)('bumped-patch-part', versionParts[2]);

@@ -96,7 +96,7 @@ async function run() {
       const changes = removeVersionLine(newChangelogSection);
 
       // Set output variables
-      setOutput('bumped-full-version', newlyBumpedVersion);
+      setOutput('bumped-semantic-version', newlyBumpedVersion);
       setOutput('bumped-major-part', versionParts[0]);
       setOutput('bumped-minor-part', versionParts[1]);
       setOutput('bumped-patch-part', versionParts[2]);

@@ -26,7 +26,7 @@ inputs:
     required: false
 
 outputs:
-  bumped-full-version:
+  bumped-semantic-version:
     description: Newly bumped semantic version based on the changes made
   bumped-major-part:
     description: Major part of the newly bumped version
