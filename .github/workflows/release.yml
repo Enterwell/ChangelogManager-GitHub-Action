@@ -22,15 +22,35 @@ jobs:
         id: version-bump
         uses: ./
         with:
-          set-version-flag: true
+          should-bump-version: true
       
       # Committing new changes
       - name: Commit changes
         uses: EndBug/add-and-commit@v9.1.1
         with:
           message: "[skip ci] [version-bump] Automated commit for version ${{ steps.version-bump.outputs.bumped-semantic-version }}"
-      
-      - name: Enable Pull Request Automerge
+
+      # Parse the semantic version
+      - name: Parsing semantic version
+        uses: booxmedialtd/ws-action-parse-semver@v1
+        id: semver_parser
+        with:
+          input_string: ${{ steps.version-bump.outputs.bumped-semantic-version }}
+
+      # Update Git tags
+      - name: Git tags update
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          git tag "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
+          git tag -f "v${{ steps.semver_parser.outputs.major }}" "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
+          git tag -f "v${{ steps.semver_parser.outputs.major }}.${{ steps.semver_parser.outputs.minor }}" "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
+
+          git push -f --tags
+
+      # Creating latest release
+      - name: Create GitHub release
         run: gh release create "v${{ steps.version-bump.outputs.bumped-semantic-version }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
