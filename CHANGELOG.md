@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **NOTE: This is an automatically generated file. Do not modify contents of this file manually.**
 
+## [3.1.0] - 2023-04-14
+### Added
+- New action outputs
+
+### Changed
+- Updated README
+- Release workflow now uses just our action
+
 ## [3.0.2] - 2023-04-13
 ### Fixed
 - Release action updates tags to latest release
