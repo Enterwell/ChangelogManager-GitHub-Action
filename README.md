@@ -117,6 +117,18 @@ with:
 ### `bumped-semantic-version`
 Newly bumped semantic version based on the changes made.
 
+### `bumped-major-part`
+Major part of the newly bumped version
+
+### `bumped-minor-part`
+Minor part of the newly bumped version
+
+### `bumped-patch-part`
+Patch part of the newly bumped version
+
+### `new-changes`
+Changes from the new changelog section
+
 ### Usage
 
 ```yaml

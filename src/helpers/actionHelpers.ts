@@ -7,7 +7,7 @@ import { readFileSync, readdirSync } from 'fs';
  * @param changelogLocation Path to the directory where "Changelog.md" is located
  * @param changesLocation Path to the "changes" directory
  */
-export const printContents = (changelogLocation: string, changesLocation: string) => {
+export function printContents(changelogLocation: string, changesLocation: string) {
   let changelogName = 'changelog.md';
   
   // Print the contents of the directory that should contain "Changelog.md"
@@ -48,4 +48,28 @@ export const printContents = (changelogLocation: string, changesLocation: string
   } catch (error) {
     throw new Error(`Error occurred while reading changelog file.\n${error}`);
   }
+}
+
+/**
+ * Gets the semantic version from a changelog section by using regex.
+ *
+ * @param input Changelog section
+ */
+export function getVersionFromString(input: string) {
+  const regex = /(?:\[)(\d+\.\d+\.\d+)(?:\])/;
+  const match = input.match(regex);
+
+  return match ? match[1] : null;
+}
+
+/**
+ * Removes the first header line from a changelog section to get changes.
+ *
+ * @param input Changelog section
+ */
+export function removeVersionLine(input: string) {
+  const lines = input.split('\n');
+  lines.shift();
+
+  return lines.join('\n');
 }

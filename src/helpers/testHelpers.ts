@@ -8,7 +8,7 @@ import { type ExecOptions, exec } from '@actions/exec';
  * 
  * @param rootDir Root directory where the 'change' directory will be created
  */
-export const createAndFillChanges = (rootDir: string) => {
+export function createAndFillChanges(rootDir: string) {
   const changesPath = join(rootDir, 'changes');
   mkdirSync(changesPath);
 
@@ -23,7 +23,7 @@ export const createAndFillChanges = (rootDir: string) => {
  * 
  * @param rootDir Root directory where the 'Changelog.md' will be created
  */
-export const createChangelogFile = (rootDir: string) => {
+export function createChangelogFile(rootDir: string) {
   const changelogContent = 
     `# Changelog
 All notable changes to this project will be documented in this file.
@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  * @param changesInDiffLocation Input changes in different locaiton
  * @param changesLocation Input changes location
  */
-export const runActionAsync = async (changelogLocation: string, changesInDiffLocation: boolean, changesLocation: string) => {
+export async function runActionAsync(changelogLocation: string, changesInDiffLocation: boolean, changesLocation: string) {
   let executableOutput = '';
 
   const executableOptions: ExecOptions = {
