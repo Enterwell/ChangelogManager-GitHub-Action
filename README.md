@@ -68,6 +68,8 @@ The action also needs to be able to find `CHANGELOG.md` file (naming is case-ins
 *Important note*. As it currently stands, the action is inserting the newly compiled section **above** the latest changelog entry. So, the `CHANGELOG.md` needs to contain **atleast**
 
 ```
+_NOTE: This is an automatically generated file. Do not modify contents of this file manually._
+
 ## [Unreleased]
 ```
 
