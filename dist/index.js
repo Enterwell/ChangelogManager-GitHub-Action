@@ -145,26 +145,9 @@ function run() {
                         newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
                     }
                 }
-                else if (process.platform === 'darwin') {
-                    fileToRunPath = (0, path_1.join)(__dirname, 'clm-osx');
-                    (0, fs_extra_1.chmodSync)(fileToRunPath, 0o777);
-                    let error;
-                    if (setVersionOption == null) {
-                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-                        newChangelogSection = result.stdout;
-                        error = result.stderr;
-                    }
-                    else {
-                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-                        newChangelogSection = result.stdout;
-                        error = result.stderr;
-                    }
-                    if (error) {
-                        throw new Error(error);
-                    }
-                }
                 else {
-                    fileToRunPath = (0, path_1.join)(__dirname, 'clm-linux');
+                    const fileName = `clm-${process.platform === 'darwin' ? 'osx' : 'linux'}`;
+                    fileToRunPath = (0, path_1.join)(__dirname, fileName);
                     (0, fs_extra_1.chmodSync)(fileToRunPath, 0o777);
                     let error;
                     if (setVersionOption == null) {
