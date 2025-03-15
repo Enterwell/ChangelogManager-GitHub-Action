@@ -20,16 +20,16 @@ jobs:
       
       # Installing pnpm
       - name: Install pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: pnpm/action-setup@v2
         with:
-          version: 8.x
+          version: 8
       
       # Defining what Node.js version to use
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
           cache: pnpm
+          node-version: 16.x
       
       # Installing node dependencies using pnpm
       - name: Pnpm install

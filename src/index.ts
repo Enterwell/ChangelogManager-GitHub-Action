@@ -49,15 +49,36 @@ async function run() {
 
       // If on windows VM
       if (process.platform === 'win32') {
-        fileToRunPath = join(__dirname, 'clm.exe');
+        fileToRunPath = join(__dirname, 'clm-win.exe');
 
         if (setVersionOption == null) {
           newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
         } else {
           newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
         }
+      } else if (process.platform === 'darwin') {
+        fileToRunPath = join(__dirname, 'clm-osx');
+        chmodSync(fileToRunPath, 0o777);
+
+        let error: string;
+
+        if (setVersionOption == null) {
+          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
+
+          newChangelogSection = result.stdout;
+          error = result.stderr;
+        } else {
+          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
+
+          newChangelogSection = result.stdout;
+          error = result.stderr;
+        }
+
+        if (error) {
+          throw new Error(error);
+        }
       } else {
-        fileToRunPath = join(__dirname, 'clm');
+        fileToRunPath = join(__dirname, 'clm-linux');
         chmodSync(fileToRunPath, 0o777);
 
         let error: string;
