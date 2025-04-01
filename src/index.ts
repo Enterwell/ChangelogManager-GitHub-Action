@@ -49,7 +49,7 @@ async function run() {
 
       // If on windows VM
       if (process.platform === 'win32') {
-        fileToRunPath = join(__dirname, 'clm.exe');
+        fileToRunPath = join(__dirname, 'clm-win.exe');
 
         if (setVersionOption == null) {
           newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
@@ -57,7 +57,9 @@ async function run() {
           newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
         }
       } else {
-        fileToRunPath = join(__dirname, 'clm');
+        const fileName = `clm-${process.platform === 'darwin' ? 'osx' : 'linux'}`;
+
+        fileToRunPath = join(__dirname, fileName);
         chmodSync(fileToRunPath, 0o777);
 
         let error: string;

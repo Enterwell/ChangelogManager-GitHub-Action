@@ -137,7 +137,7 @@ function run() {
                 let newChangelogSection;
                 // If on windows VM
                 if (process.platform === 'win32') {
-                    fileToRunPath = (0, path_1.join)(__dirname, 'clm.exe');
+                    fileToRunPath = (0, path_1.join)(__dirname, 'clm-win.exe');
                     if (setVersionOption == null) {
                         newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
                     }
@@ -146,7 +146,8 @@ function run() {
                     }
                 }
                 else {
-                    fileToRunPath = (0, path_1.join)(__dirname, 'clm');
+                    const fileName = `clm-${process.platform === 'darwin' ? 'osx' : 'linux'}`;
+                    fileToRunPath = (0, path_1.join)(__dirname, fileName);
                     (0, fs_extra_1.chmodSync)(fileToRunPath, 0o777);
                     let error;
                     if (setVersionOption == null) {
