@@ -125,7 +125,7 @@ with:
 ### `should-merge-changelog`
 **Optional** Should the newly generated changelog section be merged to changelog
   + If set to false, the merge step is skipped
-  + Defauls to `true`
+  + Defaults to `true`
 
 ## 📤 Outputs
 
