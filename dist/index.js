@@ -111,6 +111,8 @@ function run() {
             let changesLocation;
             const shouldBumpVersion = (0, core_1.getInput)('should-bump-version') === 'true';
             const pathToProjectFile = (0, core_1.getInput)('path-to-project-file');
+            const revisionNumber = (0, core_1.getInput)('revision-number');
+            const shouldMergeChangelog = (0, core_1.getInput)('should-merge-changelog') === 'true';
             if (!differentLocation) {
                 changesLocation = (0, path_1.join)(changelogLocation, 'changes');
             }
@@ -123,6 +125,8 @@ function run() {
             console.log(`Using changes location: ${changesLocation}`);
             console.log(`Should bump version: ${shouldBumpVersion}`);
             console.log(`Using path to the project file: ${pathToProjectFile}`);
+            console.log(`Using revision number: ${revisionNumber}`);
+            console.log(`Should merge changelog: ${shouldMergeChangelog}`);
             if (!changesLocation.endsWith('changes')) {
                 throw new Error('Pass in correct location for the change files');
             }
@@ -132,34 +136,30 @@ function run() {
             // Run the executable
             try {
                 const setVersionProjectFilePath = pathToProjectFile !== '' ? `:${pathToProjectFile}` : '';
-                const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : null;
+                const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : '';
+                const revisionNumberOption = revisionNumber ? `-r ${revisionNumber}` : '';
+                const shouldMergeChangelogOption = !shouldMergeChangelog ? '-mc false' : '';
+                const execOptions = [changelogLocation, changesLocation];
+                if (setVersionOption)
+                    execOptions.push(setVersionOption);
+                if (revisionNumberOption)
+                    execOptions.push(revisionNumberOption);
+                if (shouldMergeChangelogOption)
+                    execOptions.push(shouldMergeChangelogOption);
                 let fileToRunPath;
                 let newChangelogSection;
                 // If on windows VM
                 if (process.platform === 'win32') {
                     fileToRunPath = (0, path_1.join)(__dirname, 'clm-win.exe');
-                    if (setVersionOption == null) {
-                        newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-                    }
-                    else {
-                        newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-                    }
+                    newChangelogSection = (0, child_process_1.execFileSync)(fileToRunPath, execOptions, { encoding: 'utf-8' });
                 }
                 else {
                     const fileName = `clm-${process.platform === 'darwin' ? 'osx' : 'linux'}`;
                     fileToRunPath = (0, path_1.join)(__dirname, fileName);
                     (0, fs_extra_1.chmodSync)(fileToRunPath, 0o777);
-                    let error;
-                    if (setVersionOption == null) {
-                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-                        newChangelogSection = result.stdout;
-                        error = result.stderr;
-                    }
-                    else {
-                        const result = (0, child_process_1.spawnSync)(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-                        newChangelogSection = result.stdout;
-                        error = result.stderr;
-                    }
+                    const result = (0, child_process_1.spawnSync)(fileToRunPath, execOptions, { encoding: 'utf-8' });
+                    newChangelogSection = result.stdout;
+                    const error = result.stderr;
                     if (error) {
                         throw new Error(error);
                     }

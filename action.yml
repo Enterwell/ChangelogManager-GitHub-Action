@@ -18,12 +18,19 @@ inputs:
     description: Location of the 'changes' directory
     required: false
   should-bump-version:
-    description: Should the new version be bumped in the appropriate project file ('package.json' or '*.csproj')
+    description: Should the new version be bumped in the appropriate project file
     required: false
     default: 'false'
   path-to-project-file:
     description: 'Path to the project file. If not set, the application will try to automatically determine the project file. Currently supported project types: NPM (package.json) and .NET SDK (*.csproj with the version tag).'
     required: false
+  revision-number:
+    description: If the revision number is provided, 4 number long versions will be supported. This is write-only, which means the revision number will not be bumped automatically, but only replaced if provided
+    required: false
+  should-merge-changelog:
+    description: Should the newly generated changelog section be merged to the changelog. If set to false, the merge step is skipped
+    required: false
+    default: 'true'
 
 outputs:
   bumped-semantic-version:
