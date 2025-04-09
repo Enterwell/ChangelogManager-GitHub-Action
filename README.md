@@ -89,6 +89,8 @@ with:
   changes-location: ./somewhere-else/changes
   should-bump-version: true
   path-to-project-file: ./somewhere-else/project-file
+  revision-number: 1234
+  should-merge-changelog: false
 ```
 
 ## 📥 Inputs
@@ -114,6 +116,16 @@ with:
   + If the previous input is set to `true`, but this input is not passed in explicitly, the action will try to automatically determine the appropriate project file
     + automatic discovery only searches for `package.json` or `*.csproj` with the `version` tag in the same directory as the changelog file
   + If the previous input is set to `false`, this input is **ignored**
+
+### `revision-number`
+**Optional** New revision number
+  + If the revision number is provided, 4 number long versions will be supported
+  + This is **write-only**, which means the revision number will not be bumped automatically, but only replaced if provided
+
+### `should-merge-changelog`
+**Optional** Should the newly generated changelog section be merged to changelog
+  + If set to false, the merge step is skipped
+  + Defaults to `true`
 
 ## 📤 Outputs
 

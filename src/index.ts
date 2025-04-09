@@ -17,6 +17,8 @@ async function run() {
     let changesLocation: string;
     const shouldBumpVersion = getInput('should-bump-version') === 'true';
     const pathToProjectFile = getInput('path-to-project-file');
+    const revisionNumber = getInput('revision-number');
+    const shouldMergeChangelog = getInput('should-merge-changelog') === 'true';
 
     if (!differentLocation) {
       changesLocation = join(changelogLocation, 'changes');
@@ -30,6 +32,8 @@ async function run() {
     console.log(`Using changes location: ${changesLocation}`);
     console.log(`Should bump version: ${shouldBumpVersion}`);
     console.log(`Using path to the project file: ${pathToProjectFile}`);
+    console.log(`Using revision number: ${revisionNumber}`);
+    console.log(`Should merge changelog: ${shouldMergeChangelog}`);
 
     if (!changesLocation.endsWith('changes')) {
       throw new Error('Pass in correct location for the change files');
@@ -42,7 +46,15 @@ async function run() {
     // Run the executable
     try {
       const setVersionProjectFilePath = pathToProjectFile !== '' ? `:${pathToProjectFile}` : '';
-      const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : null;
+      const setVersionOption = shouldBumpVersion ? `-sv${setVersionProjectFilePath}` : '';
+      const revisionNumberOption = revisionNumber ? `-r ${revisionNumber}` : '';
+      const shouldMergeChangelogOption = !shouldMergeChangelog ? '-mc false' : '';
+
+      const execOptions = [changelogLocation, changesLocation];
+
+      if (setVersionOption) execOptions.push(setVersionOption);
+      if (revisionNumberOption) execOptions.push(revisionNumberOption);
+      if (shouldMergeChangelogOption) execOptions.push(shouldMergeChangelogOption);
 
       let fileToRunPath: string;
       let newChangelogSection: string;
@@ -51,30 +63,17 @@ async function run() {
       if (process.platform === 'win32') {
         fileToRunPath = join(__dirname, 'clm-win.exe');
 
-        if (setVersionOption == null) {
-          newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-        } else {
-          newChangelogSection = execFileSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-        }
+        newChangelogSection = execFileSync(fileToRunPath, execOptions, { encoding: 'utf-8' });
       } else {
         const fileName = `clm-${process.platform === 'darwin' ? 'osx' : 'linux'}`;
 
         fileToRunPath = join(__dirname, fileName);
         chmodSync(fileToRunPath, 0o777);
 
-        let error: string;
+        const result = spawnSync(fileToRunPath, execOptions, { encoding: 'utf-8' });
 
-        if (setVersionOption == null) {
-          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation], { encoding: 'utf-8' });
-
-          newChangelogSection = result.stdout;
-          error = result.stderr;
-        } else {
-          const result = spawnSync(fileToRunPath, [changelogLocation, changesLocation, setVersionOption], { encoding: 'utf-8' });
-
-          newChangelogSection = result.stdout;
-          error = result.stderr;
-        }
+        newChangelogSection = result.stdout;
+        const error = result.stderr;
 
         if (error) {
           throw new Error(error);
